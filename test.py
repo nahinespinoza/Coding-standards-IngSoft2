@@ -15,6 +15,7 @@ LETTER_THRESHOLDS = ((90.0, "A"), (80.0, "B"), (70.0, "C"), (60.0, "D"))
 FAILING_LETTER = "F"
 STATUS_PASSED = "Passed"
 STATUS_FAILED = "Failed"
+HONOR_ROLL_AVERAGE = 90.0
 
 
 class Student:
@@ -81,6 +82,11 @@ class Student:
             return STATUS_PASSED
         return STATUS_FAILED
 
+    @property
+    def honor_roll(self):
+        """True si tiene notas y el promedio es 90 o más."""
+        return bool(self.grades) and self.average >= HONOR_ROLL_AVERAGE
+
 
 def run_action(description, action, *args):
     """Ejecuta una acción; si la entrada es inválida, imprime el error."""
@@ -123,6 +129,10 @@ def main():
     for student in (ana, luis):
         print(f"{student.name}: promedio {student.average:.2f} | "
               f"letra {student.letter_grade} | {student.status}")
+
+    print("\n--- 7. Cuadro de honor ---")
+    for student in (ana, luis):
+        print(f"{student.name}: cuadro de honor = {student.honor_roll}")
 
 
 if __name__ == "__main__":
