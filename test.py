@@ -114,6 +114,22 @@ class Student:
             )
         del self.grades[index]
 
+    def summary(self):
+        """Devuelve el reporte resumen formateado del estudiante."""
+        honor = "Sí" if self.honor_roll else "No"
+        lines = (
+            "=" * 38,
+            f"ID del estudiante:     {self.student_id}",
+            f"Nombre del estudiante: {self.name}",
+            f"Cantidad de notas:     {len(self.grades)}",
+            f"Promedio:              {self.average:.2f}",
+            f"Letra:                 {self.letter_grade}",
+            f"Estado:                {self.status}",
+            f"Cuadro de honor:       {honor}",
+            "=" * 38,
+        )
+        return "\n".join(lines)
+
 
 def run_action(description, action, *args):
     """Ejecuta una acción; si la entrada es inválida, imprime el error."""
@@ -166,6 +182,10 @@ def main():
     run_action("eliminar nota 10 por valor", ana.remove_grade_by_value, 10)
     run_action("eliminar índice 1", ana.remove_grade_by_index, 1)
     run_action("eliminar índice 9", ana.remove_grade_by_index, 9)
+
+    print("\n--- 9. Reportes resumen ---")
+    print(ana.summary())
+    print(luis.summary())
 
 
 if __name__ == "__main__":
