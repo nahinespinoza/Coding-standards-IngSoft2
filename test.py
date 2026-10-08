@@ -10,6 +10,12 @@ import math
 MIN_GRADE = 0.0
 MAX_GRADE = 100.0
 
+PASSING_AVERAGE = 60.0
+LETTER_THRESHOLDS = ((90.0, "A"), (80.0, "B"), (70.0, "C"), (60.0, "D"))
+FAILING_LETTER = "F"
+STATUS_PASSED = "Passed"
+STATUS_FAILED = "Failed"
+
 
 class Student:
     """Estudiante con un ID, un nombre y una lista de notas."""
@@ -53,6 +59,28 @@ class Student:
         """
         self.grades.append(self._validate_grade(grade))
 
+    @property
+    def average(self):
+        """Promedio de las notas (0.0 si no hay notas)."""
+        if not self.grades:
+            return 0.0
+        return sum(self.grades) / len(self.grades)
+
+    @property
+    def letter_grade(self):
+        """Letra (A-F) según el promedio."""
+        for threshold, letter in LETTER_THRESHOLDS:
+            if self.average >= threshold:
+                return letter
+        return FAILING_LETTER
+
+    @property
+    def status(self):
+        """'Passed' si el promedio es 60 o más; en otro caso 'Failed'."""
+        if self.average >= PASSING_AVERAGE:
+            return STATUS_PASSED
+        return STATUS_FAILED
+
 
 def run_action(description, action, *args):
     """Ejecuta una acción; si la entrada es inválida, imprime el error."""
@@ -87,6 +115,14 @@ def main():
         run_action(f"agregar nota {grade}", ana.add_grade, grade)
     for grade in ("Cincuenta", 101, -5, float("nan"), True, None):
         run_action(f"agregar nota {grade!r}", ana.add_grade, grade)
+
+    print("\n--- 3-5. Promedio, letra y aprobado/reprobado ---")
+    luis = create_student("L003", "Luis Mora")
+    for grade in (50, 45.5, 60):
+        run_action(f"agregar nota {grade}", luis.add_grade, grade)
+    for student in (ana, luis):
+        print(f"{student.name}: promedio {student.average:.2f} | "
+              f"letra {student.letter_grade} | {student.status}")
 
 
 if __name__ == "__main__":
