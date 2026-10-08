@@ -87,6 +87,33 @@ class Student:
         """True si tiene notas y el promedio es 90 o más."""
         return bool(self.grades) and self.average >= HONOR_ROLL_AVERAGE
 
+    def remove_grade_by_value(self, grade):
+        """Elimina la primera nota igual al valor dado.
+
+        Raises:
+            ValueError: si el valor es inválido o no está en la lista.
+        """
+        value = self._validate_grade(grade)
+        if value not in self.grades:
+            raise ValueError(f"La nota {value:g} no existe.")
+        self.grades.remove(value)
+
+    def remove_grade_by_index(self, index):
+        """Elimina la nota en la posición dada (0 es la primera nota).
+
+        Raises:
+            ValueError: si el índice no es entero o está fuera de rango.
+        """
+        if isinstance(index, bool) or not isinstance(index, int):
+            raise ValueError(
+                f"El índice debe ser un entero, se recibió {index!r}.")
+        if not 0 <= index < len(self.grades):
+            raise ValueError(
+                f"El índice {index} está fuera de rango "
+                f"(el estudiante tiene {len(self.grades)} notas)."
+            )
+        del self.grades[index]
+
 
 def run_action(description, action, *args):
     """Ejecuta una acción; si la entrada es inválida, imprime el error."""
@@ -133,6 +160,12 @@ def main():
     print("\n--- 7. Cuadro de honor ---")
     for student in (ana, luis):
         print(f"{student.name}: cuadro de honor = {student.honor_roll}")
+
+    print("\n--- 8. Eliminar notas ---")
+    run_action("eliminar nota 72.5 por valor", ana.remove_grade_by_value, 72.5)
+    run_action("eliminar nota 10 por valor", ana.remove_grade_by_value, 10)
+    run_action("eliminar índice 1", ana.remove_grade_by_index, 1)
+    run_action("eliminar índice 9", ana.remove_grade_by_index, 9)
 
 
 if __name__ == "__main__":
